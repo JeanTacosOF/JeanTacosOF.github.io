@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loading GTA Style</title>
+
+<style>
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: black;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Images background */
+.background {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    transition: opacity 1.5s ease-in-out;
+}
+
+#bg1 { opacity: 1; }
+#bg2 { opacity: 0; }
+
+/* Overlay sombre */
+.overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        rgba(0,0,0,0.3),
+        rgba(0,0,0,0.7)
+    );
+}
+
+/* Astuce GTA */
+.tip-container {
+    position: absolute;
+    bottom: 6%;
+    left: 3%;
+    max-width: 55%;
+    padding: 14px 20px;
+    background: rgba(0, 0, 0, 0.65);
+    color: white;
+    font-size: 18px;
+    line-height: 1.4;
+    opacity: 0;
+    animation: tipFadeIn 1.5s ease forwards;
+}
+
+.tip-title {
+    font-weight: bold;
+    margin-right: 6px;
+}
+
+@keyframes tipFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div id="bg1" class="background"></div>
+<div id="bg2" class="background"></div>
+<div class="overlay"></div>
+
+<div class="tip-container" id="tipBox">
+    <span class="tip-title">CONSEIL |</span>
+    <span id="tipText"></span>
+</div>
+
+<script>
+const slides = [
+    {
+        image: "images/img1.jpg",
+        tip: "Essayez d'économiser votre argent pour acheter de meilleures armes et voitures."
+    },
+    {
+        image: "images/img2.jpg",
+        tip: "Certaines missions sont disponibles uniquement la nuit."
+    },
+    {
+        image: "images/img3.jpg",
+        tip: "Un bon équipement peut faire la différence en combat."
+    }
+];
+
+let index = 0;
+let showBg1 = true;
+
+const bg1 = document.getElementById("bg1");
+const bg2 = document.getElementById("bg2");
+const tipText = document.getElementById("tipText");
+const tipBox = document.getElementById("tipBox");
+
+function changeSlide() {
+    const slide = slides[index];
+
+    // Astuce GTA (reset animation)
+    tipBox.style.opacity = 0;
+    setTimeout(() => {
+        tipText.textContent = slide.tip;
+        tipBox.style.animation = "none";
+        tipBox.offsetHeight;
+        tipBox.style.animation = "tipFadeIn 1.5s ease forwards";
+    }, 300);
+
+    // Image fade
+    if (showBg1) {
+        bg2.style.backgroundImage = `url('${slide.image}')`;
+        bg2.style.opacity = 1;
+        bg1.style.opacity = 0;
+    } else {
+        bg1.style.backgroundImage = `url('${slide.image}')`;
+        bg1.style.opacity = 1;
+        bg2.style.opacity = 0;
+    }
+
+    showBg1 = !showBg1;
+    index = (index + 1) % slides.length;
+}
+
+// Initialisation
+changeSlide();
+setInterval(changeSlide, 6000);
+</script>
+
+</body>
+</html>

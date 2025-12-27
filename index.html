@@ -70,6 +70,26 @@ html, body {
         transform: translateY(0);
     }
 }
+
+#steam-profile {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: white;
+    font-family: Arial, sans-serif;
+    z-index: 9999;
+}
+
+#steam-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 6px;
+}
+
+
 </style>
 </head>
 
@@ -77,14 +97,41 @@ html, body {
 
 <div id="bg1" class="background"></div>
 <div id="bg2" class="background"></div>
-<div class="overlay"></div>
 
+<div id="steam-profile">
+    <img id="steam-avatar" src="" alt="Avatar">
+    <span id="steam-name">Chargement...</span>
+</div>
+
+
+<div class="overlay"></div>
 <div class="tip-container" id="tipBox">
     <span class="tip-title">CONSEIL |</span>
     <span id="tipText"></span>
 </div>
 
 <script>
+
+const params = new URLSearchParams(window.location.search);
+const steamid = params.get("steamid");
+
+if (steamid) {
+    fetch(`https://steamcommunity.com/profiles/${steamid}?xml=1`)
+        .then(res => res.text())
+        .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
+        .then(data => {
+            const name = data.querySelector("steamID")?.textContent;
+            const avatar = data.querySelector("avatarMedium")?.textContent;
+
+            if (name && avatar) {
+                document.getElementById("steam-name").textContent = name;
+                document.getElementById("steam-avatar").src = avatar;
+            }
+        })
+        .catch(err => console.error("Erreur Steam:", err));
+}
+
+
 const slides = [
     {
         image: "images/img1.jpg",

@@ -43,13 +43,13 @@ html, body {
 /* Astuce GTA */
 .tip-container {
     position: absolute;
-    bottom: 6%;
-    left: 3%;
+    bottom: 3%;
+    left: 1%;
     max-width: 55%;
-    padding: 14px 20px;
+    padding: 14px 10px;
     background: rgba(0, 0, 0, 0.65);
     color: white;
-    font-size: 18px;
+    font-size: 25px;
     line-height: 1.4;
     opacity: 0;
     animation: tipFadeIn 1.5s ease forwards;
@@ -77,18 +77,37 @@ html, body {
     left: 20px;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     color: white;
     font-family: sans-serif;
-    font-size: 20px;
     z-index: 9999;
 }
 
-#steam-avatar {
-    width: 48px;
-    height: 48px;
-    border-radius: 6px;
+.steam-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
 }
+
+#steam-name {
+    font-size: 25px;
+    font-weight: bold;
+}
+
+#steam-id {
+    font-size: 16px;
+    opacity: 0.8;
+}
+#date-today {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    color: white;
+    font-family: sans-serif;
+    font-size: 26px;
+    z-index: 9999;
+}
+
 
 
 </style>
@@ -101,9 +120,12 @@ html, body {
 
 <div id="steam-profile">
     <img id="steam-avatar" src="" alt="Avatar">
-    <span id="steam-name">Chargement...</span>
-    <span id="date-today">Chargement...</span>
+    <div class="steam-text">
+        <span id="steam-name">Chargement...</span>
+        <span id="steam-id">Chargement...</span>
+    </div>
 </div>
+<span id="date-today">Chargement...</span>
 
 
 <div class="overlay"></div>
@@ -130,6 +152,7 @@ if (!steamid || steamid.includes("STEAM_")) {
             if (name && avatar) {
                 document.getElementById("steam-name").textContent = name;
                 document.getElementById("steam-avatar").src = avatar;
+                document.getElementById("steam-id").textContent = steamid;
             }
         })
         .catch(err => console.error("Erreur Steam:", err));
@@ -187,6 +210,30 @@ function changeSlide() {
 // Initialisation
 changeSlide();
 setInterval(changeSlide, 6000);
+
+function changeDateInformation() {
+    var date = new Date();
+    var day = date.getDate();
+    var month = date.getMonth() + 1;
+    var year = date.getFullYear();
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    var seconds = date.getSeconds();
+
+    if (seconds < 10) {
+        seconds = "0" + seconds;
+    } else if (minutes < 10) {
+        minutes = "0" + minutes;
+    } else if (hours < 10) {
+        hours = "0" + hours;
+    }
+
+    var today = day + '/' + month + '/' + year + ' ' + hours + ':' + minutes + ':' + seconds;
+    document.getElementById("date-today").textContent = today;
+}
+
+changeDateInformation();
+setInterval(changeDateInformation, 1000);
 </script>
 
 </body>
